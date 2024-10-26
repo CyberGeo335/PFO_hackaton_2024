@@ -1,11 +1,12 @@
 # back/routes.py
 
 from flask import Blueprint, request, jsonify
-from app.utils.knowledge_base import create_knowledge_base
-from app.utils.response import response
-from app.utils.query_processing import reranker
+from utils.knowledge_base import create_knowledge_base
+from utils.response import response
+from utils.query_processing import reranker
 from transformers import AutoTokenizer
 from vllm import LLM
+import torch
 
 main_bp = Blueprint('main', __name__)
 

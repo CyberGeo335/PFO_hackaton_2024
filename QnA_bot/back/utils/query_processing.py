@@ -1,6 +1,7 @@
 # app/utils/query_processing.py
 
 from sentence_transformers import CrossEncoder
+import numpy as np
 
 reranker = CrossEncoder('BAAI/bge-reranker-v2-m3')
 
