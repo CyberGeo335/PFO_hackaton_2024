@@ -1,0 +1,31 @@
+# Используем образ CUDA 12.1 с поддержкой Ubuntu
+FROM python:3.10
+
+# Устанавливаем рабочую директорию внутри контейнера
+WORKDIR /app
+
+# Обновляем и устанавливаем зависимости, включая OpenGL
+RUN apt-get update && \
+    apt-get install -y \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libgtk-3-dev \
+    libgl1-mesa-dev \
+    ffmpeg && \
+    rm -rf /var/lib/apt/lists/*
+
+# Копируем requirements.txt и устанавливаем зависимости
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Копируем все файлы приложения в контейнер
+COPY . .
+
+# Открываем порт, на котором будет работать FastAPI (или Uvicorn)
+EXPOSE 8000
+
+# Команда для запуска приложения (замените на вашу команду)
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
