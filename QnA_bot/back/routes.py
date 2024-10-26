@@ -1,6 +1,7 @@
 # back/routes.py
 
-from flask import Blueprint, request, jsonify
+from fastapi import APIRouter, Request
+from pydantic import BaseModel
 from utils.knowledge_base import create_knowledge_base
 from utils.response import response
 from utils.query_processing import reranker
@@ -8,7 +9,7 @@ from transformers import AutoTokenizer
 from vllm import LLM
 import torch
 
-main_bp = Blueprint('main', __name__)
+main_router = APIRouter()
 
 # Создание базы знаний при инициализации
 knowledge_base_retriever = create_knowledge_base('/home/user1/GreenQuery/datasets/knowledge_data_del/')
@@ -20,17 +21,14 @@ llm = LLM(
     max_seq_len_to_capture=8192
 )
 
-@main_bp.route('/query', methods=['POST'])
-def handle_query():
-    data = request.json
-    query = data.get('query')
-    
-    # Если директория проекта не указана, используем базу знаний
-    if 'база знаний' in query.lower():
-        prj_dir = '/home/user1/GreenQuery/datasets/knowledge_data_del/'
-    else:
-        prj_dir = data.get('prj_dir', None)
-    
-    answer = response(query, prj_dir, knowledge_base_retriever, reranker, tokenizer, llm)
-    return jsonify({'answer': answer})
 
+class QueryRequest(BaseModel):
+    query: str
+    prj_dir: str = None
+
+@main_router.post("/query")
+async def handle_query(request: QueryRequest):
+    query = request.query
+    prj_dir = '/home/user1/GreenQuery/datasets/knowledge_data_del/' if 'база знаний' in query.lower() else request.prj_dir
+    answer = response(query, prj_dir, knowledge_base_retriever, reranker, tokenizer, llm)
+    return {"answer": answer}

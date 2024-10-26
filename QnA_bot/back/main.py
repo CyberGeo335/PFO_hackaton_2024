@@ -1,12 +1,8 @@
 # back/main.py
 
-from flask import Flask
-from routes import main_bp
+from fastapi import FastAPI
+from routes import main_router
 
-def create_app():
-    app = Flask(__name__)
-    
-    # Регистрация blueprint для обработки запросов
-    app.register_blueprint(main_bp)
-    
-    return app
+app = FastAPI()
+
+app.include_router(main_router)
