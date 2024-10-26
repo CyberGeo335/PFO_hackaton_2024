@@ -2,6 +2,7 @@ from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import JSONResponse, FileResponse
 # from typing import Annotated
 
+
 import os
 from loguru import logger
 import torch
@@ -13,6 +14,8 @@ logger.info(f"Running on {DEVICE}")
 model = YOLO("last.pt").to(DEVICE)
 
 app = FastAPI()
+
+
 
 @app.get("/")
 async def read_root():
@@ -59,8 +62,8 @@ async def upload_file(file: UploadFile = File(...)):
         pred_classes = prediction.boxes.cls.cpu().numpy()
         class_names = [model.names[int(cls)] for cls in pred_classes]
 
-        logger.info(f"Предсказание для {file_name}: {class_names}")
-        return JSONResponse(content={"message": f"Предсказано: {class_names}", "file_location": file_location})
+        logger.info(f"Суммаризация для {file_name}: {class_names}")
+        return JSONResponse(content={"message": f"Суммаризировано: {class_names}", "file_location": file_location})
 
     except Exception as e:
         logger.error(f"Ошибка при обработке файла: {e}")
