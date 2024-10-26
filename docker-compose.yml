@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  pfohackaton2024:
+    image: pfohackaton2024
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 5002:5002
