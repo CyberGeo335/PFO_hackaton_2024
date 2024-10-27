@@ -1,0 +1,195 @@
+.main-page-container {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+    background-color: var(--background-color);
+}
+
+.left-container {
+    flex: 1;
+    background-image: url('../icons/Puzyr.png');
+    background-size: 1000px 1500px;
+    background-repeat: no-repeat;
+    background-position: -450px -70px;
+}
+
+.main-content-container {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+    height: 85%;
+    flex: 2;
+}
+
+.right-container {
+    flex:1;
+    background-image: url('../icons/Puzyr.png');
+    background-size: 1000px 1500px;
+    background-repeat: no-repeat;
+}
+
+.info-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    color: var(--color);
+    width: 100%;
+    height: 70vh;
+}
+
+.team-tag {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: calc(20px + 3vw);
+    width: 100%;
+    flex: 1;
+}
+
+.pfo-info {
+    width: 100%;
+    flex: 3;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: var(--font-size);
+}
+
+.rotate-img {
+    border-radius: 50px;
+    width: 150px; /* Set your specific width */
+    height: 150px; /* Set your specific height */
+    animation: rotateImage 10s linear infinite;
+    transform-origin: 51% 51%; /* Set origin to center */
+  }
+  
+  @keyframes rotateImage {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(-360deg); /* Full rotation */
+    }
+  }
+
+.attach-file-info {
+    position: absolute;
+    top: 70%;
+    left: 20%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.attach-file {
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.file-container {
+    margin-top: 10px;
+    width: 30vw;
+    margin-bottom: 20px;
+    max-height: 7vh;
+    font-size: 10px;
+    overflow-y: scroll;
+}
+
+.file-text {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items:flex-start;
+    color: var(--alter-color);
+    gap: 5px;
+}
+
+.question-info {
+    cursor: pointer;
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    top: 20%;
+    left: 42%;
+    z-index: 2;
+}
+
+.summary-info {
+    cursor: pointer;
+    position: absolute;
+    top: 70%;
+    right: 20%;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.responce-container {
+    flex-direction: column;
+    display: flex;
+    overflow: scroll;
+    width: 100%;
+    align-items: center;
+    flex: 4;
+}
+
+.responce-text {
+    width: 95%;
+    line-height: 1.5;
+    text-align: justify;
+    word-break: break-word;
+    color: var(--color)
+}
+
+.inputs-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    flex: 1;
+    bottom: 3vh;
+    width: 50%;
+    position: fixed;
+}
+
+.question-input-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 96%;
+    position: relative;
+}
+
+.question-input {
+    width: 100%;
+    height: 3vh;
+    border: var(--border);
+    border-radius: 5px;
+    padding: 10px;
+    font-size: var(--font-size);
+    background-color: var(--background-color);
+    color: var(--color)
+}
+
+input:focus {
+    outline: none;
+}
+
+.send-img {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+}
+
