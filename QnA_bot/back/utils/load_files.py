@@ -6,7 +6,30 @@ from langchain_community.document_loaders import TextLoader, PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 # Функция для разбиения файлов на чанки
-def file_to_chunks_with_splitter(file_name, sep, chunk_size, chunk_overlap):
+def file_to_chunks_with_splitter(file_name,
+                                 sep,
+                                 chunk_size,
+                                 chunk_overlap):
+    """
+        Разбивает файл на чанки текста заданного размера и перекрытия.
+
+        Параметры:
+            file_name (str): Полный путь к файлу.
+            sep (str): Разделитель для объединения текста в случае таблиц.
+            chunk_size (int): Размер каждого чанка текста.
+            chunk_overlap (int): Размер перекрытия между чанками.
+
+        Возвращает:
+            list: Список текстовых чанков, полученных из файла.
+
+        Поддерживаемые форматы:
+            - txt
+            - docx
+            - pdf
+
+        Исключения:
+            ValueError: Выдается, если формат файла не поддерживается.
+        """
     file_ext = file_name.split('.')[-1]
     file_path = file_name
     overall_chunks = []
@@ -47,7 +70,23 @@ def file_to_chunks_with_splitter(file_name, sep, chunk_size, chunk_overlap):
     return overall_chunks
 
 # Функция для загрузки и обработки проекта с вложенными файлами
-def load_project_files(project_dir, sep='\n', chunk_size=2048, chunk_overlap=128):
+def load_project_files(project_dir,
+                       sep='\n',
+                       chunk_size=2048,
+                       chunk_overlap=128):
+    """
+        Загружает и разбивает все файлы в директории проекта на чанки,
+        преобразуя их в объекты Document для обработки.
+
+        Параметры:
+            project_dir (str): Путь к директории проекта.
+            sep (str): Разделитель для текста в случае таблиц.
+            chunk_size (int): Размер каждого чанка.
+            chunk_overlap (int): Размер перекрытия между чанками.
+
+        Возвращает:
+            list: Список объектов Document, содержащих текстовые чанки и метаданные.
+    """
     documents = []
     for root, _, files in os.walk(project_dir):
         for file in files:

@@ -13,13 +13,29 @@ summarizer = pipeline("summarization", model="IlyaGusev/rut5_base_sum_gazeta")
 
 # Функция для суммаризации документов
 def summarize_documents(docs, max_length=150):
+    """
+        Создает суммаризацию для текста из списка документов.
+
+        Параметры:
+            docs (list): Список объектов Document с текстом.
+            max_length (int): Максимальная длина суммаризации.
+
+        Возвращает:
+            str: Краткая суммаризация текста из документов.
+    """
     full_text = ' '.join([doc.text for doc in docs])
     summary = summarizer(full_text, max_length=max_length, min_length=30, do_sample=False)
     return summary[0]['summary_text']
 
 def get_example_prompts(num_examples=3):
     """
-    Генерация примеров вопросов и ответов для использования в промпте.
+        Загружает случайные примеры запросов и ответов из CSV файла.
+
+        Параметры:
+            num_examples (int): Количество примеров для генерации.
+
+        Возвращает:
+            str: Строка с примерами вопросов и ответов.
     """
     answer_csv_path = '/home/user1/GreenQuery/datasets/metrics/train.csv'
     answer_data = pd.read_csv(answer_csv_path, sep='\t')
@@ -32,7 +48,9 @@ def get_example_prompts(num_examples=3):
     return example_text
 
 
-def vllm_infer(tokenizer, wrapped_llm, texts, query,
+def vllm_infer(tokenizer,
+               wrapped_llm,
+               texts, query,
                temperature: float = 0.1,
                top_p: float = 0.95,
                top_k: int = 50,
@@ -41,6 +59,31 @@ def vllm_infer(tokenizer, wrapped_llm, texts, query,
                presence_penalty: float = 0.5,
                frequency_penalty: float = 0.2,
                stop=["Я не могу ответить на ваш вопрос.", "Ответ окончен"]):
+    """
+        Формирует ответ на основе контекста и примеров с использованием LLM-saiga_8b.
+
+        - SYSTEM_PROMPT - глобальный промпт для настройки
+        - user_prompt - промпт для пользовательских запросов, с подкреплением примеров из train.csv
+        и конкретизации того, что результат должен быть связан с экологией.
+
+        Параметры:
+            tokenizer (AutoTokenizer): Токенайзер для модели.
+            wrapped_llm (LLM): Модель большой языковой модели.
+            texts (str): Контекст, на основе которого строится ответ.
+            query (str): Запрос пользователя.
+            temperature (float): Температура для управления случайностью генерации.
+            top_p (float): Порог вероятности для сэмплирования токенов.
+            top_k (int): Количество наилучших токенов для выбора на каждом шаге.
+            max_tokens (int): Максимальное количество токенов в ответе.
+            repetition_penalty (float): Штраф за повторение токенов.
+            presence_penalty (float): Штраф за присутствие определенных токенов.
+            frequency_penalty (float): Штраф за частоту использования токенов.
+            stop (list): Список стоп-токенов.
+
+        Возвращает:
+            list: Список ответов на запросы пользователя.
+    """
+
     SYSTEM_PROMPT = "Ты — Сайга, русскоязычный автоматический ассистент. Ты разговариваешь с людьми и помогаешь им."
 
     example_prompts = get_example_prompts(num_examples=3)
@@ -90,7 +133,28 @@ def vllm_infer(tokenizer, wrapped_llm, texts, query,
 
 
 # Функция для генерации ответа с проверкой на релевантность
-def response(query, prj_dir, knowledge_retriever, reranker, tokenizer, llm):
+def response(query,
+             prj_dir,
+             knowledge_retriever,
+             reranker,
+             tokenizer,
+             llm):
+    """
+        Обрабатывает запрос: определяет его тип (суммаризация или вопрос),
+        извлекает соответствующие документы из базы знаний или загруженного проекта, и генерирует ответ.
+
+        Параметры:
+            query (str): Запрос пользователя.
+            prj_dir (str): Путь к директории загруженного проекта.
+            knowledge_retriever (VectorStoreIndexRetriever): Объект для поиска по базе знаний.
+            reranker (CrossEncoder): Модель для реранкинга.
+            tokenizer (AutoTokenizer): Токенайзер для модели.
+            llm (LLM): Модель LLM для генерации текста.
+
+        Возвращает:
+            str: Ответ на запрос пользователя или сообщение о его отсутствии.
+    """
+
     query_type = classify_query(query)
 
     # Если запрос на суммаризацию загруженного проекта

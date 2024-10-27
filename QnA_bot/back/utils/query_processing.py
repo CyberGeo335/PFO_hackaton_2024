@@ -7,12 +7,33 @@ reranker = CrossEncoder('BAAI/bge-reranker-v2-m3')
 
 # Классификация запроса: суммаризация или вопрос
 def classify_query(query):
+    """
+        Классифицирует запрос как запрос на суммаризацию или вопрос.
+
+        Параметры:
+            query (str): Запрос пользователя.
+
+        Возвращает:
+            str: Тип запроса — "summarization" или "question".
+    """
     if "суммаризация" in query.lower() or "обзор" in query.lower():
         return "summarization"
     return "question"
 
 # Функция для реранкинга топовых документов
 def top_k_rerank(query: str, retriever, reranker, top_k: int = 2):
+    """
+        Ранжирует список документов на основе запроса, возвращая топ-k релевантных результатов.
+
+        Параметры:
+            query (str): Запрос пользователя.
+            retriever (VectorStoreIndexRetriever): Объект для поиска по базе знаний или проекту.
+            reranker (CrossEncoder): Модель для реранкинга.
+            top_k (int): Количество лучших документов для возврата.
+
+        Возвращает:
+            tuple: Список названий документов, текстов и релевантного значения.
+    """
     documents = retriever.retrieve(query)
     relevant_score = documents[0].score
     print(f'Наивысшее значение релевантности документов: {relevant_score}')

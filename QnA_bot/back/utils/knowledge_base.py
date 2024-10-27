@@ -5,6 +5,19 @@ from load_files import load_project_files
 
 
 def create_knowledge_base(base_dir):
+    """
+        Создает базу знаний, загружая документы из указанной директории, и
+        возвращает объект для поиска (retriever) по индексу.
+
+        Параметры:
+            base_dir (str): Путь к директории, где хранятся документы для базы знаний.
+
+        Возвращает:
+            retriever (VectorStoreIndexRetriever): Объект для поиска по базе знаний.
+
+        Исключения:
+            None: Возвращает None, если загрузка документов не удалась.
+    """
     docs = load_project_files(base_dir)
     if docs:
         index = VectorStoreIndex.from_documents(documents=docs, show_progress=True)
