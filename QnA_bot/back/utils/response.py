@@ -4,8 +4,8 @@ from transformers import pipeline
 import torch
 import pandas as pd
 from llama_index.core import VectorStoreIndex
-from query_processing import top_k_rerank, classify_query
-from load_files import load_project_files
+from .query_processing import top_k_rerank, classify_query
+from .load_files import load_project_files
 from llama_index.core.postprocessor import SimilarityPostprocessor
 from vllm import LLM, SamplingParams
 

@@ -1,10 +1,22 @@
-version: '3.4'
+version: '3'
 
 services:
-  pfohackaton2024:
-    image: pfohackaton2024
+  frontend:
     build:
-      context: .
-      dockerfile: ./Dockerfile
+      context: ./front
+    container_name: react_app
     ports:
-      - 5002:5002
+      - "3000:3000"   # Exposes React app on localhost:3000
+    environment:
+      - REACT_APP_BACKEND_URL=http://backend:8000  # Points Axios to the backend container
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./back
+    container_name: backend_app
+    ports:
+      - "8000:8000"   # Exposes Backend on localhost:8000
+    environment:
+      - ENV=development

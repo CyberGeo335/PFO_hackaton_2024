@@ -1,7 +1,7 @@
 # app/utils/knowledge_base.py
 
 from llama_index.core import VectorStoreIndex
-from load_files import load_project_files
+from .load_files import load_project_files
 
 
 def create_knowledge_base(base_dir):
